@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { business, cta, navLinks } from '../data/content'
 import Logo from './Logo'
 import Icon from './Icon'
@@ -8,6 +8,8 @@ export default function Navbar() {
   const [pastFold, setPastFold] = useState(false)
   const [open, setOpen] = useState(false)
   const [activeId, setActiveId] = useState('home')
+  const menuToggleRef = useRef(null)
+  const pendingNavRef = useRef(null)
 
   useEffect(() => {
     const onScroll = () => {
@@ -42,28 +44,42 @@ export default function Navbar() {
     if (!open) return undefined
 
     const scrollY = window.scrollY
-    const prevOverflow = document.body.style.overflow
+    const prevHtmlOverflow = document.documentElement.style.overflow
+    const prevBodyOverflow = document.body.style.overflow
+    document.documentElement.style.overflow = 'hidden'
     document.body.style.overflow = 'hidden'
-    document.body.style.position = 'fixed'
-    document.body.style.top = `-${scrollY}px`
-    document.body.style.left = '0'
-    document.body.style.right = '0'
-    document.body.style.width = '100%'
+
+    const onKeyDown = (event) => {
+      if (event.key !== 'Escape') return
+      pendingNavRef.current = null
+      setOpen(false)
+      requestAnimationFrame(() => menuToggleRef.current?.focus())
+    }
+
+    window.addEventListener('keydown', onKeyDown)
 
     return () => {
-      document.body.style.overflow = prevOverflow
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      document.body.style.width = ''
-      window.scrollTo(0, scrollY)
+      window.removeEventListener('keydown', onKeyDown)
+
+      const pendingHash = pendingNavRef.current
+      pendingNavRef.current = null
+      document.documentElement.style.overflow = prevHtmlOverflow
+      document.body.style.overflow = prevBodyOverflow
+
+      requestAnimationFrame(() => {
+        if (pendingHash?.startsWith('#')) {
+          window.location.hash = pendingHash
+          return
+        }
+        window.scrollTo(0, scrollY)
+      })
     }
   }, [open])
 
   const ctaRevealed = pastFold || open
 
   return (
+    <>
     <header
       className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${
         scrolled || open
@@ -129,6 +145,7 @@ export default function Navbar() {
           </a>
 
           <button
+            ref={menuToggleRef}
             type="button"
             onClick={() => setOpen((v) => !v)}
             className="inline-flex h-11 w-11 min-h-[44px] min-w-[44px] items-center justify-center rounded-lg border border-gold-border text-cream lg:hidden"
@@ -156,44 +173,51 @@ export default function Navbar() {
           </button>
         </div>
       </nav>
-
-      <div
-        id="mobile-menu"
-        aria-hidden={!open}
-        inert={open ? undefined : ''}
-        className={`fixed inset-0 z-40 flex flex-col bg-ink-900/98 backdrop-blur-md transition-transform duration-300 ease-out lg:hidden ${
-          open ? 'translate-x-0' : 'pointer-events-none translate-x-full'
-        }`}
-      >
-        <div className="h-[calc(var(--header-height)+env(safe-area-inset-top,0px))]" />
-        <ul className="container-px flex flex-1 flex-col gap-1 overflow-y-auto py-6">
-          {navLinks.map((link) => (
-            <li key={link.href}>
-              <a
-                href={link.href}
-                tabIndex={open ? 0 : -1}
-                onClick={() => setOpen(false)}
-                className="flex min-h-[56px] items-center rounded-lg px-3 font-display text-2xl font-semibold uppercase tracking-tight text-cream transition-colors hover:bg-gold/5 hover:text-gold"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div className="container-px pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-2">
-          <a
-            href={cta.whatsappBook}
-            target="_blank"
-            rel="noopener noreferrer"
-            tabIndex={open ? 0 : -1}
-            onClick={() => setOpen(false)}
-            className="btn-primary w-full"
-          >
-            <Icon name="whatsapp" filled className="h-4 w-4" />
-            {cta.labels.book}
-          </a>
-        </div>
-      </div>
     </header>
+
+    <div
+      id="mobile-menu"
+      aria-hidden={!open}
+      inert={open ? undefined : ''}
+      className={`fixed inset-0 z-40 flex flex-col bg-ink-900/98 backdrop-blur-md transition-transform duration-300 ease-out lg:hidden ${
+        open ? 'translate-x-0' : 'pointer-events-none translate-x-full'
+      }`}
+    >
+      <div className="h-[calc(var(--header-height)+env(safe-area-inset-top,0px))]" />
+      <ul className="container-px flex flex-1 flex-col gap-1 overflow-y-auto py-6">
+        {navLinks.map((link) => (
+          <li key={link.href}>
+            <a
+              href={link.href}
+              tabIndex={open ? 0 : -1}
+              onClick={(event) => {
+                if (link.href.startsWith('#')) {
+                  event.preventDefault()
+                  pendingNavRef.current = link.href
+                }
+                setOpen(false)
+              }}
+              className="flex min-h-[56px] items-center rounded-lg px-3 font-display text-2xl font-semibold uppercase tracking-tight text-cream transition-colors hover:bg-gold/5 hover:text-gold"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+      <div className="container-px pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-2">
+        <a
+          href={cta.whatsappBook}
+          target="_blank"
+          rel="noopener noreferrer"
+          tabIndex={open ? 0 : -1}
+          onClick={() => setOpen(false)}
+          className="btn-primary w-full"
+        >
+          <Icon name="whatsapp" filled className="h-4 w-4" />
+          {cta.labels.book}
+        </a>
+      </div>
+    </div>
+    </>
   )
 }
