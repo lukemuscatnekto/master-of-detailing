@@ -25,11 +25,11 @@ export default function Loader() {
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
 
-    const fadeTimer = setTimeout(() => setLeaving(true), 1500)
+    const fadeTimer = setTimeout(() => setLeaving(true), 1000)
     const removeTimer = setTimeout(() => {
       setActive(false)
       document.body.style.overflow = prevOverflow
-    }, 2000)
+    }, 1400)
 
     return () => {
       clearTimeout(fadeTimer)

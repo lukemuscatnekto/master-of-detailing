@@ -177,7 +177,7 @@ export default function FeaturedProject() {
             </Reveal>
 
             {supporting.length > 0 && (
-              <Reveal delay={60} className="hidden min-w-0 lg:block">
+              <Reveal delay={60} className="hidden min-w-0 md:block">
                 <ul className="grid grid-cols-3 gap-2 sm:gap-3">
                   {supporting.map((image) => (
                     <li key={image.id} className="min-w-0">
@@ -244,7 +244,7 @@ export default function FeaturedProject() {
             </Reveal>
 
             {supporting.length > 0 && (
-              <Reveal delay={140} className="mt-8 min-w-0 lg:hidden">
+              <Reveal delay={140} className="mt-8 min-w-0 md:hidden">
                 <ul className="grid grid-cols-3 gap-2 min-[400px]:gap-3">
                   {supporting.map((image) => (
                     <li key={image.id} className="min-w-0">

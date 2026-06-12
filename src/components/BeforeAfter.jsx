@@ -27,7 +27,7 @@ export default function BeforeAfter() {
 
                   <div className="p-3 sm:p-5">
                     <Suspense
-                      fallback={<div className="aspect-[4/3] w-full rounded-lg bg-graphite-600" />}
+                      fallback={<div className="aspect-[4/3] w-full rounded-xl bg-graphite-600" />}
                     >
                       <BeforeAfterSlider
                         before={item.before}
@@ -38,7 +38,7 @@ export default function BeforeAfter() {
                     </Suspense>
                   </div>
 
-                  <p className="border-t border-white/[0.06] px-4 py-2.5 text-center text-sm leading-snug text-gray-400 sm:px-6 sm:py-3">
+                  <p className="border-t border-white/[0.06] px-4 py-2.5 text-center text-sm leading-snug text-cream-muted/80 sm:px-6 sm:py-3">
                     {item.alt}
                   </p>
                 </article>

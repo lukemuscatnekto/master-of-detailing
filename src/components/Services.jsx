@@ -64,10 +64,11 @@ function SupportingServiceRow({ service, delay }) {
           href={cta.whatsappEnquiry}
           target="_blank"
           rel="noopener noreferrer"
-          className="arrow-link mt-1 inline-flex shrink-0 items-center gap-1 self-start text-xs font-medium text-gold transition-colors hover:text-cream sm:mt-0.5"
+          className="arrow-link mt-1 inline-flex min-h-[44px] shrink-0 items-center gap-1 self-start text-xs font-medium text-gold transition-colors hover:text-cream sm:mt-0.5"
           aria-label={`${cta.labels.serviceEnquire} — ${service.title}`}
         >
-          <span className="sr-only sm:not-sr-only">{cta.labels.serviceEnquire}</span>
+          <span className="sm:hidden">Enquire</span>
+          <span className="hidden sm:inline">{cta.labels.serviceEnquire}</span>
           <Icon name="arrowRight" className="h-4 w-4" />
         </a>
       </article>

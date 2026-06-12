@@ -17,7 +17,7 @@ export default function BeforeAfterSlider({ before, after, beforeAlt, afterAlt }
   }
 
   return (
-    <div className="group relative aspect-[4/3] w-full select-none overflow-hidden rounded-lg">
+    <div className="group relative aspect-[4/3] w-full select-none overflow-hidden rounded-xl">
       <img
         src={after}
         alt={afterAlt}
