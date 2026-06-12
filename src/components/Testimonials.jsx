@@ -60,7 +60,7 @@ export default function Testimonials() {
           </blockquote>
 
           {testimonials.length > 1 && (
-            <div className="mt-6 flex justify-center gap-2.5">
+            <div className="mt-6 flex justify-center gap-1">
               {testimonials.map((item, dotIndex) => (
                 <button
                   key={item.name}
@@ -68,10 +68,15 @@ export default function Testimonials() {
                   onClick={() => setIndex(dotIndex)}
                   aria-label={`Show testimonial ${dotIndex + 1}: ${item.name}`}
                   aria-current={dotIndex === index ? 'true' : undefined}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    dotIndex === index ? 'w-6 bg-gold' : 'w-2 bg-cream-muted/40 hover:bg-cream-muted/70'
-                  }`}
-                />
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full"
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`block h-2 rounded-full transition-all duration-300 ${
+                      dotIndex === index ? 'w-6 bg-gold' : 'w-2 bg-cream-muted/40'
+                    }`}
+                  />
+                </button>
               ))}
             </div>
           )}

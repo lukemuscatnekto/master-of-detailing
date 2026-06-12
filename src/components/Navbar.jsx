@@ -46,6 +46,7 @@ export default function Navbar() {
     const scrollY = window.scrollY
     const prevHtmlOverflow = document.documentElement.style.overflow
     const prevBodyOverflow = document.body.style.overflow
+    document.documentElement.dataset.mobileMenu = 'open'
     document.documentElement.style.overflow = 'hidden'
     document.body.style.overflow = 'hidden'
 
@@ -63,6 +64,7 @@ export default function Navbar() {
 
       const pendingHash = pendingNavRef.current
       pendingNavRef.current = null
+      delete document.documentElement.dataset.mobileMenu
       document.documentElement.style.overflow = prevHtmlOverflow
       document.body.style.overflow = prevBodyOverflow
 

@@ -53,7 +53,6 @@ export default {
           'radial-gradient(circle at 18% 18%, rgba(240,160,0,0.06) 0%, transparent 34%), radial-gradient(circle at 82% 72%, rgba(240,160,0,0.04) 0%, transparent 32%), linear-gradient(180deg, rgba(15,15,15,1) 0%, rgba(5,5,5,1) 100%)',
         'featured-project-silk':
           'radial-gradient(55% 45% at 100% 0%, rgba(240,160,0,0.06) 0%, transparent 50%), linear-gradient(180deg, rgba(8,8,8,1) 0%, rgba(5,5,5,1) 100%)',
-        'hero-silk': "url('/reference/brand-banner.png')",
       },
       keyframes: {
         'fade-up': {
