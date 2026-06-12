@@ -4,18 +4,11 @@ import {
   workshopVideos,
   workshopVideosCopy,
 } from '../data/content'
+import { isAssetPresent, verifyAsset } from '../utils/verifyAsset'
+import AssetLoadNotice from './AssetLoadNotice'
 import Icon from './Icon'
 import Reveal from './Reveal'
 import SectionHeading from './SectionHeading'
-
-async function verifyAssetSrc(src) {
-  try {
-    const response = await fetch(src, { method: 'HEAD' })
-    return response.ok
-  } catch {
-    return false
-  }
-}
 
 function playerClasses(orientation) {
   if (orientation === 'portrait') {
@@ -34,12 +27,14 @@ function frameClasses(orientation) {
 export default function WorkshopVideos() {
   const videoRef = useRef(null)
   const [availableVideos, setAvailableVideos] = useState(null)
+  const [videosUnavailable, setVideosUnavailable] = useState(false)
   const [activeId, setActiveId] = useState(null)
   const [loadError, setLoadError] = useState(false)
 
   useEffect(() => {
     if (!siteFlags.showWorkshopVideos) {
       setAvailableVideos([])
+      setVideosUnavailable(false)
       return undefined
     }
 
@@ -49,14 +44,22 @@ export default function WorkshopVideos() {
       const checks = await Promise.all(
         workshopVideos.map(async (video) => ({
           video,
-          ok: await verifyAssetSrc(video.src),
+          status: await verifyAsset(video.src),
         })),
       )
 
       if (cancelled) return
 
-      const verified = checks.filter(({ ok }) => ok).map(({ video }) => video)
+      const verified = checks
+        .filter(({ status }) => isAssetPresent(status))
+        .map(({ video }) => video)
+
       setAvailableVideos(verified)
+      setVideosUnavailable(
+        verified.length === 0 &&
+          checks.length > 0 &&
+          checks.every(({ status }) => !isAssetPresent(status)),
+      )
 
       const featured = verified.find((v) => v.featured) ?? verified[0]
       if (featured) setActiveId(featured.id)
@@ -96,7 +99,6 @@ export default function WorkshopVideos() {
   }, [activeVideo?.src])
 
   if (!siteFlags.showWorkshopVideos || availableVideos === null) return null
-  if (availableVideos.length === 0) return null
 
   return (
     <section
@@ -115,6 +117,12 @@ export default function WorkshopVideos() {
           headingId="workshop-videos-heading"
         />
 
+        {videosUnavailable ? (
+          <AssetLoadNotice className="mt-8 sm:mt-12 lg:mt-16">
+            Workshop video clips could not be loaded right now. Please refresh the page or contact
+            Matthias on WhatsApp if this continues.
+          </AssetLoadNotice>
+        ) : (
         <div className="mt-8 grid grid-cols-1 gap-8 sm:mt-12 lg:mt-16 lg:grid-cols-[48fr_52fr] lg:items-start lg:gap-x-14">
           <div className="min-w-0 lg:pr-2">
             <Reveal>
@@ -226,6 +234,7 @@ export default function WorkshopVideos() {
             </ul>
           </Reveal>
         </div>
+        )}
       </div>
     </section>
   )

@@ -1,17 +1,10 @@
 import { useEffect, useState } from 'react'
 import { cta, protectionAftercare, showProtectionAftercare } from '../data/content'
+import { isAssetPresent, verifyAsset } from '../utils/verifyAsset'
+import AssetLoadNotice from './AssetLoadNotice'
 import Icon from './Icon'
 import MobileDisclosure from './MobileDisclosure'
 import Reveal from './Reveal'
-
-async function imageAvailable(src) {
-  try {
-    const res = await fetch(src, { method: 'HEAD' })
-    return res.ok
-  } catch {
-    return false
-  }
-}
 
 function FeaturedTier({ tier, delay }) {
   const isRecommended = tier.recommended
@@ -115,11 +108,13 @@ function AftercarePanel({ panel, delay, whatsappUrl }) {
 export default function ProtectionAftercare() {
   const [visibleTiers, setVisibleTiers] = useState(null)
   const [visiblePanels, setVisiblePanels] = useState(null)
+  const [tiersUnavailable, setTiersUnavailable] = useState(false)
 
   useEffect(() => {
     if (!showProtectionAftercare) {
       setVisibleTiers([])
       setVisiblePanels([])
+      setTiersUnavailable(false)
       return undefined
     }
 
@@ -129,20 +124,32 @@ export default function ProtectionAftercare() {
       const tierChecks = await Promise.all(
         protectionAftercare.featuredTiers.map(async (tier) => ({
           tier,
-          ok: tier.image ? await imageAvailable(tier.image) : false,
+          status: tier.image ? await verifyAsset(tier.image) : 'missing',
         })),
       )
       const panelChecks = await Promise.all(
         protectionAftercare.autoGraph.panels.map(async (panel) => ({
           panel,
-          ok: panel.image ? await imageAvailable(panel.image) : false,
+          status: panel.image ? await verifyAsset(panel.image) : 'missing',
         })),
       )
 
       if (cancelled) return
 
-      setVisibleTiers(tierChecks.filter(({ ok }) => ok).map(({ tier }) => tier))
-      setVisiblePanels(panelChecks.filter(({ ok }) => ok).map(({ panel }) => panel))
+      const tiers = tierChecks
+        .filter(({ status }) => isAssetPresent(status))
+        .map(({ tier }) => tier)
+      const panels = panelChecks
+        .filter(({ status }) => isAssetPresent(status))
+        .map(({ panel }) => panel)
+
+      setVisibleTiers(tiers)
+      setVisiblePanels(panels)
+      setTiersUnavailable(
+        tiers.length === 0 &&
+          tierChecks.length > 0 &&
+          tierChecks.every(({ status }) => !isAssetPresent(status)),
+      )
     })()
 
     return () => {
@@ -152,7 +159,6 @@ export default function ProtectionAftercare() {
 
   if (!showProtectionAftercare) return null
   if (visibleTiers === null) return null
-  if (visibleTiers.length === 0) return null
 
   const { autoGraph, advisory } = protectionAftercare
 
@@ -189,13 +195,20 @@ export default function ProtectionAftercare() {
           />
         </Reveal>
 
-        <ul className="mt-8 grid grid-cols-1 gap-3 sm:mt-12 sm:gap-4 md:grid-cols-3 md:gap-5 lg:mt-14 lg:items-stretch">
-          {visibleTiers.map((tier, index) => (
-            <li key={tier.id} className="min-w-0">
-              <FeaturedTier tier={tier} delay={index * 60} />
-            </li>
-          ))}
-        </ul>
+        {tiersUnavailable ? (
+          <AssetLoadNotice className="mt-8 sm:mt-12 lg:mt-14">
+            Coating product images could not be loaded right now. Message Matthias on WhatsApp to
+            discuss protection options for your vehicle.
+          </AssetLoadNotice>
+        ) : (
+          <ul className="mt-8 grid grid-cols-1 gap-3 sm:mt-12 sm:gap-4 md:grid-cols-3 md:gap-5 lg:mt-14 lg:items-stretch">
+            {visibleTiers.map((tier, index) => (
+              <li key={tier.id} className="min-w-0">
+                <FeaturedTier tier={tier} delay={index * 60} />
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div className="mt-10 lg:mt-16">
           <MobileDisclosure title="Other professional coating options">

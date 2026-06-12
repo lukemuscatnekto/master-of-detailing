@@ -1,19 +1,11 @@
 import { Fragment, lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { cta, featuredProject, siteFlags } from '../data/content'
+import { isAssetPresent, verifyAsset } from '../utils/verifyAsset'
+import AssetLoadNotice from './AssetLoadNotice'
 import Icon from './Icon'
 import Reveal from './Reveal'
 
 const GalleryLightbox = lazy(() => import('./GalleryLightbox'))
-
-async function assetAvailable(src) {
-  if (!src) return false
-  try {
-    const res = await fetch(src, { method: 'HEAD' })
-    return res.ok
-  } catch {
-    return false
-  }
-}
 
 function ProjectImage({ image, variant = 'supporting', onOpen }) {
   const isHero = variant === 'hero'
@@ -67,11 +59,13 @@ function ProjectImage({ image, variant = 'supporting', onOpen }) {
 export default function FeaturedProject() {
   const [ready, setReady] = useState(false)
   const [resolvedImages, setResolvedImages] = useState([])
+  const [imagesUnavailable, setImagesUnavailable] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(null)
 
   useEffect(() => {
     if (!siteFlags.showFeaturedProject) {
       setResolvedImages([])
+      setImagesUnavailable(false)
       setReady(true)
       return undefined
     }
@@ -81,24 +75,26 @@ export default function FeaturedProject() {
     ;(async () => {
       const checks = await Promise.all(
         featuredProject.images.map(async (image) => {
-          const webpOk = image.webp ? await assetAvailable(image.webp) : false
-          const jpgOk = await assetAvailable(image.src)
-          return { image, ok: webpOk || jpgOk }
+          const webpStatus = image.webp ? await verifyAsset(image.webp) : 'missing'
+          const srcStatus = await verifyAsset(image.src)
+          const present = isAssetPresent(webpStatus) || isAssetPresent(srcStatus)
+          return { image, present }
         }),
       )
 
-      let fallbackHeroOk = false
+      let fallbackHeroPresent = false
       if (featuredProject.fallbackHeroSrc) {
-        fallbackHeroOk = await assetAvailable(featuredProject.fallbackHeroSrc)
+        const fallbackStatus = await verifyAsset(featuredProject.fallbackHeroSrc)
+        fallbackHeroPresent = isAssetPresent(fallbackStatus)
       }
 
       if (cancelled) return
 
-      const mapped = checks.map(({ image, ok }) => {
+      const mapped = checks.map(({ image, present }) => {
         const isHero = image.role === 'hero'
-        let missing = !ok
+        let missing = !present
 
-        if (isHero && !ok && fallbackHeroOk) {
+        if (isHero && !present && fallbackHeroPresent) {
           return {
             ...image,
             webp: undefined,
@@ -111,6 +107,7 @@ export default function FeaturedProject() {
       })
 
       setResolvedImages(mapped)
+      setImagesUnavailable(mapped.every((image) => image.missing))
       setReady(true)
     })()
 
@@ -143,7 +140,6 @@ export default function FeaturedProject() {
   const supporting = imagesWithIndex.filter((img) => img.role === 'supporting')
 
   if (!siteFlags.showFeaturedProject || !ready) return null
-  if (!hero || (hero.missing && supporting.every((img) => img.missing))) return null
 
   const openLightbox = (index) => {
     if (index == null) return
@@ -164,6 +160,12 @@ export default function FeaturedProject() {
       <div className="container-px relative">
         <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-14 xl:gap-x-16">
           <div className="min-w-0 space-y-3 sm:space-y-4 lg:sticky lg:top-28">
+            {imagesUnavailable && (
+              <AssetLoadNotice>
+                Featured project photos could not be loaded right now. The story below is still
+                available — refresh the page or message Matthias on WhatsApp.
+              </AssetLoadNotice>
+            )}
             <Reveal>
               {hero && (
                 <ProjectImage
