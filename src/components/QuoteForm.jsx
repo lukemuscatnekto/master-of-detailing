@@ -1,4 +1,4 @@
-﻿import { useId, useState } from 'react'
+import { useId, useState } from 'react'
 import { getWhatsAppQuoteUrl, openWhatsAppChat, SERVICE_OPTIONS } from '../data/content'
 import Icon from './Icon'
 
@@ -12,11 +12,9 @@ function validateField(value) {
 export default function QuoteForm() {
   const formId = useId()
   const carId = `${formId}-car`
-  const locationId = `${formId}-location`
   const serviceId = `${formId}-service`
 
   const [car, setCar] = useState('')
-  const [location, setLocation] = useState('')
   const [service, setService] = useState('')
   const [errors, setErrors] = useState({})
   const [submitError, setSubmitError] = useState('')
@@ -27,7 +25,6 @@ export default function QuoteForm() {
 
     const nextErrors = {
       car: validateField(car) ? '' : 'Enter your car make and model.',
-      location: validateField(location) ? '' : 'Enter your location in Malta.',
       service: validateField(service) ? '' : 'Select the service you need.',
     }
 
@@ -38,7 +35,7 @@ export default function QuoteForm() {
       return
     }
 
-    openWhatsAppChat(getWhatsAppQuoteUrl(car, location, service))
+    openWhatsAppChat(getWhatsAppQuoteUrl(car, service))
   }
 
   return (
@@ -56,12 +53,12 @@ export default function QuoteForm() {
       </h2>
 
       <p className="mt-3 text-sm leading-relaxed text-cream-muted">
-        Tell us your car model, location, and the service you need.
+        Tell us your car model and the service you need.
         <span className="mt-1 block">We&apos;ll reply on WhatsApp with a clear quote.</span>
       </p>
 
       <p className="mt-3 text-[0.65rem] font-medium uppercase tracking-[0.12em] text-gold/80 sm:text-xs">
-        No obligation · Fast reply · Premium detailing in Malta
+        No obligation · Fast reply · Garage-based detailing in Malta
       </p>
 
       <div
@@ -95,35 +92,6 @@ export default function QuoteForm() {
           {errors.car && (
             <p id={`${carId}-error`} className="mt-1.5 text-xs text-gold">
               {errors.car}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor={locationId}
-            className="text-xs font-semibold uppercase tracking-widest2 text-cream-muted"
-          >
-            Location in Malta
-          </label>
-          <input
-            id={locationId}
-            name="location"
-            type="text"
-            value={location}
-            onChange={(event) => {
-              setLocation(event.target.value)
-              if (errors.location) setErrors((prev) => ({ ...prev, location: '' }))
-            }}
-            placeholder="e.g. Mosta, Sliema, Bugibba"
-            autoComplete="off"
-            className={`${fieldClass} mt-2 ${errors.location ? 'border-gold/50' : ''}`}
-            aria-invalid={errors.location ? 'true' : undefined}
-            aria-describedby={errors.location ? `${locationId}-error` : undefined}
-          />
-          {errors.location && (
-            <p id={`${locationId}-error`} className="mt-1.5 text-xs text-gold">
-              {errors.location}
             </p>
           )}
         </div>

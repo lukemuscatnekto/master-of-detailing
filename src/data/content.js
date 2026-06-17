@@ -46,19 +46,19 @@ export const cta = {
 }
 
 export const SERVICE_OPTIONS = [
-  'Exterior wash',
-  'Interior clean',
-  'Exterior wash + Interior clean',
-  'Full detail',
-  'Ceramic protection',
-  'Not sure yet',
+  'Exterior Wash',
+  'Interior Clean',
+  'Exterior Wash + Interior Clean',
+  'Full Detail',
+  'Paint Correction + Ceramic Coating',
+  'Paint Correction + Wax Protection',
+  'Not Sure Yet',
 ]
 
-export function getWhatsAppQuoteUrl(car, location, service) {
+export function getWhatsAppQuoteUrl(car, service) {
   const text = [
     "Hi Matthias, I'd like a quote for detailing.",
     `Car: ${car.trim()}`,
-    `Location: ${location.trim()}`,
     `Service: ${service}`,
     '',
     'I can send photos if needed.',
