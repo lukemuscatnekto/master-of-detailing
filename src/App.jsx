@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Intro from './components/Intro'
 import Services from './components/Services'
+import Pricing from './components/Pricing'
 import ProtectionAftercare from './components/ProtectionAftercare'
 import Gallery from './components/Gallery'
 import FeaturedProject from './components/FeaturedProject'
@@ -69,6 +70,7 @@ export default function App() {
         <Hero />
         <Intro />
         <Services />
+        <Pricing />
         <ProtectionAftercare />
         {siteFlags.showGallery && <Gallery />}
         {siteFlags.showFeaturedProject && <FeaturedProject />}

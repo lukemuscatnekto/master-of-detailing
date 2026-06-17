@@ -89,6 +89,114 @@ export function openWhatsAppChat(url) {
   window.open(url, '_blank', 'noopener,noreferrer')
 }
 
+export const pricingCopy = {
+  eyebrow: 'Packages',
+  title: 'Detailing Packages',
+  intro:
+    'Professional interior and exterior detailing packages designed around your vehicle’s condition, size, and required level of care.',
+  specialistTitle: 'Specialist Services',
+  specialistIntro:
+    'Paint correction, ceramic coating, paint correction with ceramic coating, paint correction with wax protection, and other specialist detailing services are priced on request after inspecting the vehicle or reviewing photos.',
+  disclaimer:
+    'All prices are starting from and may vary depending on vehicle size, condition, and level of soiling.',
+}
+
+export const pricingPackages = [
+  {
+    id: 'basic',
+    name: 'Basic Detail',
+    badge: 'Essential Refresh',
+    price: 'Starting From €65',
+    duration: 'Minimum of 4.5 hours',
+    description:
+      'A complete interior and exterior refresh designed to bring your vehicle back to a clean, presentable standard.',
+    introLine: null,
+    included: [
+      'Interior vacuuming and blow out',
+      'Interior panel cleaning',
+      'Interior glass cleaning',
+      'Exterior hand wash',
+      'Wheel and rim cleaning',
+      'Wheel arch cleaning',
+      'Exterior glass cleaning',
+      'Tyre dressing',
+    ],
+    footnote: null,
+    ctaLabel: 'Request Basic Detail Quote',
+    featured: false,
+  },
+  {
+    id: 'standard',
+    name: 'Standard Detail',
+    badge: 'Most Popular',
+    price: 'Starting From €230',
+    duration: 'Minimum of 6.5 hours',
+    description:
+      'A deeper clean for customers who want improved interior hygiene, freshness, and attention to hard-to-reach areas.',
+    introLine: 'Everything included in the Basic Detail, plus:',
+    included: [
+      'Steam cleaning of interior surfaces',
+      'Interior sanitisation and disinfection',
+      'Deep cleaning of hard-to-reach areas',
+      'Enhanced interior freshness and hygiene',
+    ],
+    footnote: null,
+    ctaLabel: 'Request Standard Detail Quote',
+    featured: true,
+  },
+  {
+    id: 'deep',
+    name: 'Deep Detail',
+    badge: 'Premium Reset',
+    price: 'Starting From €350',
+    duration: 'Minimum of 8.5 hours',
+    description:
+      'A full deep-clean package for vehicles that need a more intensive reset inside and out.',
+    introLine: 'Everything included in the Standard Detail, plus:',
+    included: [
+      'Deep cleaning of seats, fabric or leather',
+      '3-month protective treatment applied to the exterior',
+      'Odour elimination fogger treatment for the cabin and air-conditioning system',
+    ],
+    footnote:
+      'The fogger treatment circulates through the cabin and air-conditioning system to help neutralise stubborn odours deep within upholstery, headliners, and vents.',
+    ctaLabel: 'Request Deep Detail Quote',
+    featured: false,
+  },
+]
+
+export const specialistPricingServices = [
+  'Paint Correction',
+  'Ceramic Coating',
+  'Paint Correction + Ceramic Coating',
+  'Paint Correction + Wax Protection',
+  'Other Specialist Services',
+]
+
+export function getWhatsAppPackageUrl(pkg) {
+  const text = [
+    `Hi Matthias, I'd like a quote for ${pkg.name}.`,
+    `Package: ${pkg.name}`,
+    `Starting price: ${pkg.price}`,
+    `Minimum time: ${pkg.duration}`,
+    '',
+    'I can send photos of the vehicle if needed.',
+  ].join('\n')
+
+  return `https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(text)}`
+}
+
+export function getWhatsAppSpecialistUrl(serviceName) {
+  const text = [
+    `Hi Matthias, I'd like a quote for ${serviceName}.`,
+    `Service: ${serviceName}`,
+    '',
+    'I can send photos of the vehicle if needed.',
+  ].join('\n')
+
+  return `https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(text)}`
+}
+
 const allNavLinks = [
   { label: 'Services', href: '#services' },
   { label: 'Gallery', href: '#gallery', requiresGallery: true },

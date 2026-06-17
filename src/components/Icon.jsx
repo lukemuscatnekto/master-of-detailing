@@ -117,6 +117,7 @@ const paths = {
   arrowRight: <path d="M5 12h14M13 6l6 6-6 6" />,
   arrowLeft: <path d="M19 12H5M11 18l-6-6 6-6" />,
   arrowUp: <path d="M12 19V5M6 11l6-6 6 6" />,
+  check: <path d="M8.5 12.5l2.5 2.5 5.5-6" />,
   facebook: (
     <path d="M14 8h2.5V5h-3c-2.8 0-4.5 1.7-4.5 4.6V12H7v3h2v8h3v-8h2.6l.4-3H12v-2.4c0-.9.2-1.3 1.3-1.3z" />
   ),
