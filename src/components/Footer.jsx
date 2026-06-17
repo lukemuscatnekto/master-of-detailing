@@ -93,6 +93,11 @@ export default function Footer() {
             </div>
           </div>
         </div>
+
+        <p className="mt-10 border-t border-white/[0.06] pt-6 text-center text-[0.65rem] leading-relaxed tracking-wide text-cream-muted/65 sm:mt-12 sm:text-xs">
+          Website designed &amp; built by{' '}
+          <span className="font-medium text-gold/85">FORM &amp; SIGNAL</span>
+        </p>
       </div>
     </footer>
   )
