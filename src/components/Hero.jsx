@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { copy, cta, images } from '../data/content'
 import useParallax from '../hooks/useParallax'
 import Icon from './Icon'
+import QuoteForm from './QuoteForm'
 import Reveal from './Reveal'
 
 export default function Hero() {
@@ -54,54 +55,62 @@ export default function Hero() {
       <div className="hero-overlay-bottom pointer-events-none absolute inset-0" aria-hidden="true" />
 
       <div className="container-px relative z-10 flex min-h-[calc(min(88svh,600px)-var(--header-height))] items-center py-5 pb-7 sm:min-h-[calc(640px-var(--header-height))] sm:py-8 sm:pb-10 lg:min-h-[calc(760px-var(--header-height))] lg:py-12">
-        <div className="w-full max-w-xl">
-          <Reveal delay={300}>
-            <p className="eyebrow flex-wrap">
-              <span className="h-px w-5 shrink-0 bg-gold" aria-hidden="true" />
-              {copy.heroEyebrow}
-            </p>
+        <div className="flex w-full flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(300px,400px)] lg:items-center lg:gap-x-10 xl:gap-x-14">
+          <div className="order-1 max-w-xl">
+            <Reveal delay={300}>
+              <p className="eyebrow flex-wrap">
+                <span className="h-px w-5 shrink-0 bg-gold" aria-hidden="true" />
+                {copy.heroEyebrow}
+              </p>
+            </Reveal>
+
+            <Reveal delay={500}>
+              <h1 className="heading-display mt-3 text-[1.7rem] leading-[0.95] sm:mt-5 sm:text-5xl md:text-6xl lg:text-[3.5rem]">
+                Precision.
+                <br />
+                Passion.
+                <br />
+                <span className="text-gold">Perfection.</span>
+              </h1>
+            </Reveal>
+
+            <Reveal delay={700}>
+              <p className="mt-3 hidden max-w-lg text-sm leading-relaxed text-cream-muted sm:mt-5 sm:block sm:text-base lg:text-lg">
+                {copy.heroParagraph}
+              </p>
+              <p className="mt-3 max-w-lg text-sm leading-relaxed text-cream-muted sm:hidden">
+                {copy.heroParagraphMobile}
+              </p>
+            </Reveal>
+
+            <Reveal delay={800}>
+              <div className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 border-b border-gold/25 pb-3 sm:mt-5">
+                <Icon name="clock" className="h-5 w-5 shrink-0 text-gold" aria-hidden="true" />
+                <p className="text-base font-medium leading-snug text-cream">{copy.heroAvailability}</p>
+              </div>
+            </Reveal>
+          </div>
+
+          <Reveal delay={850} className="order-2 w-full lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            <QuoteForm />
           </Reveal>
 
-          <Reveal delay={500}>
-            <h1 className="heading-display mt-3 text-[1.7rem] leading-[0.95] sm:mt-5 sm:text-5xl md:text-6xl lg:text-[3.5rem]">
-              Precision.
-              <br />
-              Passion.
-              <br />
-              <span className="text-gold">Perfection.</span>
-            </h1>
-          </Reveal>
-
-          <Reveal delay={700}>
-            <p className="mt-3 hidden max-w-lg text-sm leading-relaxed text-cream-muted sm:mt-5 sm:block sm:text-base lg:text-lg">
-              {copy.heroParagraph}
-            </p>
-            <p className="mt-3 max-w-lg text-sm leading-relaxed text-cream-muted sm:hidden">
-              {copy.heroParagraphMobile}
-            </p>
-          </Reveal>
-
-          <Reveal delay={800}>
-            <div className="mt-3 flex flex-wrap items-center gap-x-2.5 gap-y-1 border-b border-gold/25 pb-3 sm:mt-5">
-              <Icon name="clock" className="h-5 w-5 shrink-0 text-gold" aria-hidden="true" />
-              <p className="text-base font-medium leading-snug text-cream">{copy.heroAvailability}</p>
+          <Reveal delay={900} className="order-3 max-w-xl lg:col-start-1 lg:row-start-2">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
+              <a
+                href={cta.whatsappBook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-primary w-full sm:w-auto"
+              >
+                <Icon name="whatsapp" filled className="h-4 w-4" />
+                {cta.labels.book}
+              </a>
+              <a href="#services" className="btn-ghost arrow-link w-full sm:w-auto">
+                Explore Our Services
+                <Icon name="arrowRight" className="h-4 w-4" />
+              </a>
             </div>
-          </Reveal>
-
-          <Reveal delay={900} className="mt-5 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap sm:gap-3">
-            <a
-              href={cta.whatsappBook}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary w-full sm:w-auto"
-            >
-              <Icon name="whatsapp" filled className="h-4 w-4" />
-              {cta.labels.book}
-            </a>
-            <a href="#services" className="btn-ghost arrow-link w-full sm:w-auto">
-              Explore Our Services
-              <Icon name="arrowRight" className="h-4 w-4" />
-            </a>
           </Reveal>
         </div>
       </div>

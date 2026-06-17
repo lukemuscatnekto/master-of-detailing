@@ -45,6 +45,50 @@ export const cta = {
   },
 }
 
+export const SERVICE_OPTIONS = [
+  'Exterior wash',
+  'Interior clean',
+  'Exterior wash + Interior clean',
+  'Full detail',
+  'Ceramic protection',
+  'Not sure yet',
+]
+
+export function getWhatsAppQuoteUrl(car, location, service) {
+  const text = [
+    "Hi Matthias, I'd like a quote for detailing.",
+    `Car: ${car.trim()}`,
+    `Location: ${location.trim()}`,
+    `Service: ${service}`,
+    '',
+    'I can send photos if needed.',
+  ].join('\n')
+
+  return `https://wa.me/${business.whatsappNumber}?text=${encodeURIComponent(text)}`
+}
+
+export function openWhatsAppChat(url) {
+  const ua = navigator.userAgent || ''
+  const isMobile = /Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua)
+
+  if (!isMobile) {
+    try {
+      const parsed = new URL(url)
+      const phone = parsed.pathname.replace(/\//g, '')
+      const message = parsed.searchParams.get('text')
+      const web = `https://web.whatsapp.com/send?phone=${phone}${
+        message ? `&text=${encodeURIComponent(message)}` : ''
+      }`
+      window.open(web, '_blank', 'noopener,noreferrer')
+      return
+    } catch {
+      /* fall through to wa.me */
+    }
+  }
+
+  window.open(url, '_blank', 'noopener,noreferrer')
+}
+
 const allNavLinks = [
   { label: 'Services', href: '#services' },
   { label: 'Gallery', href: '#gallery', requiresGallery: true },
