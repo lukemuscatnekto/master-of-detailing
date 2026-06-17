@@ -96,7 +96,7 @@ export const pricingCopy = {
     'Professional interior and exterior detailing packages designed around your vehicle’s condition, size, and required level of care.',
   specialistTitle: 'Specialist Services',
   specialistIntro:
-    'Paint correction, ceramic coating, paint correction with ceramic coating, paint correction with wax protection, and other specialist detailing services are priced on request after inspecting the vehicle or reviewing photos.',
+    'Paint correction, paint correction with ceramic coating, paint correction with wax protection, and other specialist detailing services are priced on request after inspecting the vehicle or reviewing photos.',
   disclaimer:
     'All prices are starting from and may vary depending on vehicle size, condition, and level of soiling.',
 }
@@ -167,7 +167,6 @@ export const pricingPackages = [
 
 export const specialistPricingServices = [
   'Paint Correction',
-  'Ceramic Coating',
   'Paint Correction + Ceramic Coating',
   'Paint Correction + Wax Protection',
   'Other Specialist Services',
